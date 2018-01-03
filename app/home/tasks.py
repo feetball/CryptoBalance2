@@ -38,15 +38,14 @@ def get_coin_prices(start_time=None):
         else:
             return 'No price check needed!'
     except Exception as e:
-        temp = e.message
-        return 'Error getting coin prices.  Error message: ' + temp
+        return 'Error getting coin prices.  Error message: ' + str(e.message)
         
         
 def get_last_price_check():
     try:
         return Message.query.filter_by(name='GET_COIN_PRICES').order_by(desc(Message.date)).first().date
     except Exception as e:
-        return 'Error getting last price check.  Error Message: ' + e.message
+        return 'Error getting last price check.  Error Message: ' + str(e.message)
         
 def price_check_needed():
     last_price_check = get_last_price_check()
@@ -60,7 +59,7 @@ def get_latest_coin_price(coin_symbol):
     try:
         return db.session.query(CoinPrice).join(CoinPrice.Coin).filter(Coin.symbol==coin_symbol.upper()).order_by(desc(CoinPrice.date)).first().price
     except Exception as e:
-        return 'Error getting last price.  Error Message: ' + e.message
+        return 'Error getting last price.  Error Message: ' + str(e.message)
         
 def get_coin_qty(wallet):
     try: 
@@ -73,4 +72,4 @@ def get_coin_qty(wallet):
         return coin_qty
         
     except Exception as e:
-        return 'Error getting coin quantity.  Error Message: ' + e.message + 'Coin: ' + wallet.Coin.symbol
+        return 'Error getting coin quantity.  Error Message: ' + str(e.message) + 'Coin: ' + wallet.Coin.symbol

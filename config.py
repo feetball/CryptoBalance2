@@ -1,6 +1,5 @@
 # config.py
 import datetime
-from celery.schedules import crontab
 
 class Config(object):
     """
