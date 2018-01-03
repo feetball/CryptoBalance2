@@ -1,0 +1,25 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /static
+  static_dir: app/static
+- url: /.*
+  script: run.app
+
+libraries:
+- name: ssl
+  version: latest
+- name: jinja2
+  version: "2.6"
+- name: MySQLdb
+  version: "1.2.5"
+
+env_variables:
+  gae: 'true'
+  FLASK_CONFIG: 'development'
+  FLASK_APP: 'run.py'
+
+beta_settings:
+    cloud_sql_instances: cryptobalance2:us-central1:cryptobalance
