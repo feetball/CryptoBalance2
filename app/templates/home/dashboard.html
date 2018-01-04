@@ -10,28 +10,34 @@
                 <div class="intro-message">
                     <h1>Coin Balances</h1>
                     <hr class="intro-divider">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th width="20%"> Coin Symbol </th>
-                                <th width="20%"> Coin Price </th>
-                                <th width="20%"> Number of Coins </th>
-                                <th width="20%"> Value (USD)</th>
-                            </tr>
-                        </thead>
-                        {% for balance in balances %}
-                            <tr>
-                                <td> {{ balance.coin_symbol }} </td>
-                                <td> {{ balance.coin_price }} </td>
-                                <td> {{ balance.num_coins }} </td>
-                                <td> {{ balance.usd_value }} </td>
-                            </tr>
-                        {% endfor %}
-                            <tr>
-                                <td> Total Balance </td>
-                                <td> {{ total_value }} </td>
-                            </tr>
-                    </table>
+                    {% if balances %}
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="20%"> Coin Symbol </th>
+                                    <th width="20%"> Coin Price </th>
+                                    <th width="20%"> Number of Coins </th>
+                                    <th width="20%"> Value (USD)</th>
+                                </tr>
+                            </thead>
+                            {% for balance in balances %}
+                                <tr>
+                                    <td> {{ balance.coin_symbol }} </td>
+                                    <td> {{ balance.coin_price }} </td>
+                                    <td> {{ balance.num_coins }} </td>
+                                    <td> {{ balance.usd_value }} </td>
+                                </tr>
+                            {% endfor %}
+                                <tr>
+                                    <td> Total Balance </td>
+                                    <td> {{ total_value }} </td>
+                                </tr>
+                        </table>
+                    {% else %}
+                        <div style="text-align: center">
+                        <h3> No wallets have been added. </h3>
+                        <hr class="intro-divider">
+                    {% endif %}   
                 </div>
             </div>
         </div>

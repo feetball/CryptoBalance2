@@ -33,7 +33,7 @@ def get_coin_prices():
     Get prices for all coins
     """
     check_admin()
-    
+
     return render_template('admin/tasks/execute_task.html',
                            status=ret, title="Execute Task")
 

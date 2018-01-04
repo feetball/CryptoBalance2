@@ -1,16 +1,14 @@
 # app/__init__.py
+import pdb
 
 # third-party imports
+from app.extensions import csrf
+from logging.handlers import RotatingFileHandler
 from flask import abort, Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-
-import logger
-import pdb
-
-from app.extensions import csrf
 
 # local imports
 from config import app_config
@@ -19,14 +17,20 @@ from config import app_config
 db = SQLAlchemy()
 login_manager = LoginManager()
 
+
 def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
 
-    logger = logging.getlogger()
-    
-    csrf.init_app(app)    
+    # Configure logging
+    #handler = logging.FileHandler(app.config['LOGGING_LOCATION'])
+    #handler.setLevel(app.config['LOGGING_LEVEL'])
+    #formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
+    #handler.setFormatter(formatter)
+    #app.logger.addHandler(handler)
+
+    csrf.init_app(app)
 
     db.init_app(app)
 
@@ -48,11 +52,11 @@ def create_app(config_name):
     login_manager.init_app(app)
     login_manager.login_message = "You must be logged in to access this page."
     login_manager.login_view = "auth.login"
-    
+
     @app.route('/500')
     def error():
         abort(500)
-    
+
     @app.errorhandler(403)
     def forbidden(error):
         return render_template('errors/403.html', title='Forbidden'), 403

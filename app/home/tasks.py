@@ -38,31 +38,44 @@ def get_coin_prices(start_time=None):
         else:
             return 'No price check needed!'
     except Exception as e:
-        return 'Error getting coin prices.  Error message: ' + str(e.message)
-        
-        
+        e.message =  'Error getting coin prices.  Error message: ' + str(e.message)
+        raise e
+
+
 def get_last_price_check():
     try:
-        return Message.query.filter_by(name='GET_COIN_PRICES').order_by(desc(Message.date)).first().date
+        last_message = Message.query.filter_by(name='GET_COIN_PRICES').order_by(desc(Message.date)).first()
+        if last_message:
+            return last_message.date
+        else:
+            return None
     except Exception as e:
-        return 'Error getting last price check.  Error Message: ' + str(e.message)
-        
+        e.message =  'Error getting last price check.  Error Message: ' + str(e.message)
+        raise e
+
 def price_check_needed():
-    last_price_check = get_last_price_check()
-    print "time diff: " + str(((datetime.now() - last_price_check).seconds)/60)
-    if ((datetime.now() - last_price_check).seconds)/300 > 1:
-        return True
-    else:
-        return False
-        
+    try:
+        last_price_check = get_last_price_check()
+        if last_price_check:
+            print "time diff: " + str(((datetime.now() - last_price_check).seconds)/60)
+            if ((datetime.now() - last_price_check).seconds)/300 > 1:
+                return True
+            else:
+                return False
+        else:
+            return True
+    except Exception as e:
+        raise e
+
 def get_latest_coin_price(coin_symbol):
     try:
         return db.session.query(CoinPrice).join(CoinPrice.Coin).filter(Coin.symbol==coin_symbol.upper()).order_by(desc(CoinPrice.date)).first().price
     except Exception as e:
-        return 'Error getting last price.  Error Message: ' + str(e.message)
-        
+        e.message =  'Error getting last price.  Error Message: ' + str(e.message)
+        raise e
+
 def get_coin_qty(wallet):
-    try: 
+    try:
         db_url = wallet.Coin.CoinApi.url
         url = db_url.format(**{"symbol":wallet.Coin.symbol.lower(), "key":wallet.Coin.CoinApi.key, "address":wallet.address})
         url_response = requests.get(url)
@@ -70,6 +83,7 @@ def get_coin_qty(wallet):
         exec('coin_qty = ' + wallet.Coin.CoinApi.qty_extract_format)
 
         return coin_qty
-        
+
     except Exception as e:
-        return 'Error getting coin quantity.  Error Message: ' + str(e.message) + 'Coin: ' + wallet.Coin.symbol
+        e.message = 'Error getting coin quantity.  Error Message: ' + str(e.message) + 'Coin: ' + wallet.Coin.symbol
+        raise e

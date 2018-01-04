@@ -33,24 +33,25 @@ def dashboard():
     Render the dashboard template on the /dashboard route
     """
     get_coin_prices(start_time=datetime.datetime.now())
-    
+
     wallets = User.query.get_or_404(current_user.id).wallets
 
     balances = []
     total_value = 0.00
 
-    for wallet in wallets:
-        price = get_latest_coin_price(wallet.Coin.symbol)
-        qty_coins = get_coin_qty(wallet)
+    if wallets:
+        for wallet in wallets:
+            price = get_latest_coin_price(wallet.Coin.symbol)
+            qty_coins = get_coin_qty(wallet)
 
-        balance = Balance(coin_symbol = wallet.Coin.symbol, 
-                          coin_price = price,
-                          address = wallet.address,
-                          num_coins = qty_coins,
-                          usd_value = price * qty_coins)
-        balances.append(balance)
-        total_value += price*qty_coins
-        
+            balance = Balance(coin_symbol = wallet.Coin.symbol,
+                              coin_price = price,
+                              address = wallet.address,
+                              num_coins = qty_coins,
+                              usd_value = price * qty_coins)
+            balances.append(balance)
+            total_value += price*qty_coins
+
     return render_template('home/dashboard.html', balances=balances, total_value=total_value, title="Dashboard")
 
 
@@ -109,7 +110,7 @@ def edit_account_info(id):
     form.last_name.data = user.last_name
     return render_template('home/account_info/edit_account_info.html', edit_account_info=edit_account_info,
                            form=form, title="Edit Account Info")
-                          
+
 ######################
 # User Wallet Views
 ######################
@@ -119,11 +120,11 @@ def add_user_wallet():
     """
     Add a wallet for the user to the database
     """
-    
+
     check_user(current_user.id)
 
     add_user_wallet = True
-    
+
     user = current_user
 
     form = UserWalletForm()
@@ -158,9 +159,9 @@ def edit_user_wallet(id):
     add_user_wallet = False
 
     wallet = Wallet.query.get_or_404(id)
-    
+
     check_user(wallet.user_id)
-    
+
     user = User.query.get_or_404(id)
     form = UserWalletForm(obj=wallet)
     if form.validate_on_submit():
@@ -189,7 +190,7 @@ def delete_user_wallet(id):
     wallet = Wallet.query.get_or_404(id)
 
     check_user(wallet.user_id)
-    
+
     db.session.delete(wallet)
     db.session.commit()
     flash('You have successfully deleted the wallet.')
