@@ -1,5 +1,6 @@
 # app/__init__.py
 import pdb
+import requests_toolbelt.adapters.appengine
 
 # third-party imports
 from app.extensions import csrf
@@ -22,13 +23,6 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
-
-    # Configure logging
-    #handler = logging.FileHandler(app.config['LOGGING_LOCATION'])
-    #handler.setLevel(app.config['LOGGING_LEVEL'])
-    #formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
-    #handler.setFormatter(formatter)
-    #app.logger.addHandler(handler)
 
     # Use the App Engine Requests adapter. This makes sure that Requests uses
     # URLFetch.
