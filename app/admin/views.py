@@ -7,7 +7,7 @@ from flask import jsonify, abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from . import admin
-from forms import CoinForm, CoinApiForm, PriceForm, WalletForm, UserForm
+from forms import CoinForm, CoinApiForm, PriceForm, WalletForm, UserForm, MessageForm
 from .. import db
 from ..models import Coin, CoinApi, CoinPrice, Wallet, User, Message
 
@@ -17,14 +17,6 @@ def check_admin():
     """
     if not current_user.is_admin:
         abort(403)
-
-##############
-# Misc Views
-##############
-@admin.route('/messages/')
-def messages():
-    messages = Message.query.all()
-    return jsonify([message.text for message in messages])
 
 @admin.route('/get_coin_prices', methods=['GET', 'POST'])
 @login_required
@@ -514,3 +506,59 @@ def delete_wallet(id):
     return redirect(url_for('admin.list_wallets'))
 
     return render_template(title="Delete Wallet")
+
+##############
+# Message Views
+##############
+@admin.route('/messages/')
+def list_messages():
+    messages = Message.query.all()
+    return render_template('admin/messages/messages.html',
+                           messages=messages, title="Messages")
+
+@admin.route('/messages/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_message(id):
+    """
+    Edit a message
+    """
+    check_admin()
+
+    add_message = False
+
+    message = Message.query.get_or_404(id)
+    form = MessageForm(obj=message)
+    if form.validate_on_submit():
+        message.name = form.name.data
+        message.text = form.text.data
+        message.date = form.date.data
+        db.session.add(message)
+        db.session.commit()
+        flash('You have successfully edited the message.')
+
+        # redirect to the messages page
+        return redirect(url_for('admin.list_messages'))
+
+    form.name.data = message.name
+    form.text.data = message.text
+    form.date.data = message.date
+    return render_template('admin/messages/message.html', add_message=add_message,
+                           form=form, title="Edit Message")
+
+@admin.route('/messages/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_message(id):
+    """
+    Delete a message from the database
+    """
+    check_admin()
+
+    message = Message.query.get_or_404(id)
+    db.session.delete(message)
+    db.session.commit()
+    flash('You have successfully deleted the message.')
+
+    # redirect to the messages page
+    return redirect(url_for('admin.list_messages'))
+
+    return render_template(title="Delete Message")

@@ -81,9 +81,12 @@ def get_coin_qty(wallet):
         url_response = requests.get(url)
         # next line will set coin quantity to coin_qty
         exec('coin_qty = ' + wallet.Coin.CoinApi.qty_extract_format)
-
         return coin_qty
 
+    except requests.exceptions.ConnectionError as e:
+        error_message = 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
+        return error_message
+        
     except Exception as e:
-        e.message = 'Error getting coin quantity.  Error Message: ' + str(e.message) + 'Coin: ' + wallet.Coin.symbol
+        e.message = 'Error getting coin quantity.  Error Message: ' + str(e.message) + ' Coin: ' + wallet.Coin.symbol
         raise e

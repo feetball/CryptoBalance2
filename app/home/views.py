@@ -44,13 +44,22 @@ def dashboard():
             price = get_latest_coin_price(wallet.Coin.symbol)
             qty_coins = get_coin_qty(wallet)
 
-            balance = Balance(coin_symbol = wallet.Coin.symbol,
+            if type(qty_coins) is unicode:
+                balance = Balance(coin_symbol = wallet.Coin.symbol,
                               coin_price = price,
                               address = wallet.address,
                               num_coins = qty_coins,
-                              usd_value = price * qty_coins)
-            balances.append(balance)
-            total_value += price*qty_coins
+                              usd_value = 'n/a')
+                balances.append(balance)
+
+            else:
+                balance = Balance(coin_symbol = wallet.Coin.symbol,
+                                  coin_price = price,
+                                  address = wallet.address,
+                                  num_coins = qty_coins,
+                                  usd_value = price * qty_coins)
+                balances.append(balance)
+                total_value += price*qty_coins
 
     return render_template('home/dashboard.html', balances=balances, total_value=total_value, title="Dashboard")
 

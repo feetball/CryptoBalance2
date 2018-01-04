@@ -153,7 +153,7 @@ class Message(db.Model):
     date = db.Column(db.DateTime)
     
     def __repr__(self):
-        return '<Message Text: {}>'.format(self.text)
+        return '<Message Text: {}>'.format(self.name + ' ' + self.text + ' ' + str(self.date)) 
 
 #################
 # NON-DB Classes

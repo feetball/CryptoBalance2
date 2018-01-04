@@ -55,3 +55,12 @@ class UserForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
+    
+class MessageForm(FlaskForm):
+    """
+ 0   Form for admin to edit or delete a message
+    """
+    name = StringField('Name', validators=[DataRequired()])
+    text = StringField('Text', validators=[DataRequired()])
+    date = DateTimeField('Date', validators=[DataRequired()])
+    submit = SubmitField('Submit')
