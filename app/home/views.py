@@ -41,12 +41,14 @@ def dashboard():
 
     if wallets:
         for wallet in wallets:
-            price = get_latest_coin_price(wallet.Coin.symbol)
+            price, date = get_latest_coin_price(wallet.Coin.symbol)
             qty_coins = get_coin_qty(wallet)
+            price = float("%.2f" % price)
 
             if type(qty_coins) is unicode:
                 balance = Balance(coin_symbol = wallet.Coin.symbol,
                               coin_price = price,
+                              coin_price_date = date,
                               address = wallet.address,
                               num_coins = qty_coins,
                               usd_value = 'n/a')
@@ -55,13 +57,14 @@ def dashboard():
             else:
                 balance = Balance(coin_symbol = wallet.Coin.symbol,
                                   coin_price = price,
+                                  coin_price_date = date,
                                   address = wallet.address,
                                   num_coins = qty_coins,
-                                  usd_value = price * qty_coins)
+                                  usd_value = "%.2f" % (price * qty_coins))
                 balances.append(balance)
                 total_value += price*qty_coins
 
-    return render_template('home/dashboard.html', balances=balances, total_value=total_value, title="Dashboard")
+    return render_template('home/dashboard.html', balances=balances, total_value="%.2f" % (total_value), title="Dashboard")
 
 
 @home.route('/admin/dashboard')
@@ -80,12 +83,14 @@ def admin_dashboard():
 
     if wallets:
         for wallet in wallets:
-            price = get_latest_coin_price(wallet.Coin.symbol)
+            price, date = get_latest_coin_price(wallet.Coin.symbol)
             qty_coins = get_coin_qty(wallet)
+            price = float("%.2f" % price)
 
             if type(qty_coins) is unicode:
                 balance = Balance(coin_symbol = wallet.Coin.symbol,
                               coin_price = price,
+                              coin_price_date = date,
                               address = wallet.address,
                               num_coins = qty_coins,
                               usd_value = 'n/a')
@@ -94,13 +99,14 @@ def admin_dashboard():
             else:
                 balance = Balance(coin_symbol = wallet.Coin.symbol,
                                   coin_price = price,
+                                  coin_price_date = date,
                                   address = wallet.address,
                                   num_coins = qty_coins,
-                                  usd_value = price * qty_coins)
+                                  usd_value = "%.2f" % (price * qty_coins))
                 balances.append(balance)
                 total_value += price*qty_coins
 
-    return render_template('home/admin_dashboard.html', balances=balances, total_value=total_value, title="Dashboard")
+    return render_template('home/admin_dashboard.html', balances=balances, total_value="%.2f" % (total_value), title="Dashboard")
 
 ##################
 # Account Info Views

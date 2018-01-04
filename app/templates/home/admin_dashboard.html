@@ -8,9 +8,6 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="intro-message">
-                    <h1>Admin Dashboard</h1>
-                    <h3>For administrators only!</h3>
-                    <hr class="intro-divider">
                     <h1>Coin Balances</h1>
                     <hr class="intro-divider">
                     {% if balances %}
@@ -18,30 +15,35 @@
                             <thead>
                                 <tr>
                                     <th width="20%"> Coin Symbol </th>
-                                    <th width="20%"> Coin Price </th>
                                     <th width="20%"> Number of Coins </th>
+                                    <th width="20%"> Coin Price Date</th>
+                                    <th width="20%"> Coin Price </th>
                                     <th width="20%"> Value (USD)</th>
                                 </tr>
                             </thead>
                             {% for balance in balances %}
                                 <tr>
-                                    <td> {{ balance.coin_symbol }} </td>
-                                    <td> {{ balance.coin_price }} </td>
-                                    <td> {{ balance.num_coins }} </td>
-                                    <td> {{ balance.usd_value }} </td>
+                                    <td BGCOLOR="#ddd"> {{ balance.coin_symbol }} </td>
+                                    <td BGCOLOR="#ddd"> {{ balance.num_coins }} </td>
+                                    <td BGCOLOR="#ddd"> {{ balance.coin_price_date }} </td>
+                                    <td BGCOLOR="#ddd"> ${{ balance.coin_price }} </td>
+                                    <td BGCOLOR="#ddd"> ${{ balance.usd_value }} </td>
                                 </tr>
                             {% endfor %}
                                 <tr>
-                                    <td> Total Balance </td>
-                                    <td> {{ total_value }} </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td BGCOLOR="#ddd"><b>Total Balance </b></td>
+                                    <td BGCOLOR="#ddd"><b>${{ total_value }} </b></td>
                                 </tr>
                         </table>
                     {% else %}
                         <div style="text-align: center">
                         <h3> No wallets have been added. </h3>
                         <hr class="intro-divider">
-                    {% endif %}   
-                    </ul>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

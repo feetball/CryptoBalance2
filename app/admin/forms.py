@@ -41,7 +41,7 @@ class WalletForm(FlaskForm):
     """
     Form for admin to add or edit a wallet
     """
-    address = FloatField('Address', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
     user = QuerySelectField(query_factory=lambda: User.query.all(), get_label="username")
     coin = QuerySelectField(query_factory=lambda: Coin.query.all(), get_label="name")
     submit = SubmitField('Submit')

@@ -24,13 +24,13 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('Role.id'))
     is_admin = db.Column(db.Boolean, default=False)
     wallets = db.relationship('Wallet', backref='User', lazy='dynamic')
-    
+
     def count_wallets(self):
         """
         Count the number of wallets assigned to user
         """
         return len(self.wallets.all())
-    
+
     @property
     def password(self):
         """
@@ -100,23 +100,23 @@ class Coin(db.Model):
     coin_api_id = db.Column(db.Integer, db.ForeignKey('CoinApi.id'))
     coin_prices = db.relationship('CoinPrice', backref='Coin', lazy='dynamic')
     wallets = db.relationship('Wallet', backref='Coin', lazy='dynamic')
-    
+
     def count_prices(self):
         """
         Count the number of prices assigned to coin
         """
         return len(self.coin_prices.all())
-    
+
     def __repr__(self):
         return '<Coin: {}>'.format(self.name)
-        
+
 class CoinPrice(db.Model):
     __tablename__ = 'CoinPrice'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     price =  db.Column(db.Float)
     coin_id = db.Column(db.Integer, db.ForeignKey('Coin.id'), nullable=False)
     date = db.Column(db.DateTime)
-        
+
     def __repr__(self):
         return '<Price: {}>'.format(self.price)
 
@@ -128,7 +128,7 @@ class CoinApi(db.Model):
     qty_extract_format = db.Column(db.String(256))
     key = db.Column(db.String(100))
     coins = db.relationship('Coin', backref='CoinApi', lazy='dynamic')
-    
+
     def __repr__(self):
         return '<CoinApi: {}>'.format(self.name)
 
@@ -138,7 +138,7 @@ class Wallet(db.Model):
     address = db.Column(db.String(128), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
     coin_id = db.Column(db.Integer, db.ForeignKey('Coin.id'), nullable=False)
-    
+
     def __repr__(self):
         return '<Wallet: {}>'.format(self.address)
 
@@ -151,18 +151,19 @@ class Message(db.Model):
     name = db.Column(db.Unicode(200), nullable=False)
     text = db.Column(db.Unicode(200))
     date = db.Column(db.DateTime)
-    
+
     def __repr__(self):
-        return '<Message Text: {}>'.format(self.name + ' ' + self.text + ' ' + str(self.date)) 
+        return '<Message Text: {}>'.format(self.name + ' ' + self.text + ' ' + str(self.date))
 
 #################
 # NON-DB Classes
 #################
 
 class Balance(object):
-    def __init__(self, coin_symbol, coin_price, address, num_coins, usd_value):
+    def __init__(self, coin_symbol, coin_price, coin_price_date, address, num_coins, usd_value):
         self.coin_symbol = coin_symbol
         self.coin_price = coin_price
+        self.coin_price_date = coin_price_date
         self.address = address
         self.num_coins = num_coins
         self.usd_value = usd_value

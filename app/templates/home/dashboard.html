@@ -15,29 +15,35 @@
                             <thead>
                                 <tr>
                                     <th width="20%"> Coin Symbol </th>
-                                    <th width="20%"> Coin Price </th>
                                     <th width="20%"> Number of Coins </th>
+                                    <th width="20%"> Coin Price Date</th>
+                                    <th width="20%"> Coin Price </th>
                                     <th width="20%"> Value (USD)</th>
                                 </tr>
                             </thead>
                             {% for balance in balances %}
                                 <tr>
                                     <td> {{ balance.coin_symbol }} </td>
-                                    <td> {{ balance.coin_price }} </td>
                                     <td> {{ balance.num_coins }} </td>
-                                    <td> {{ balance.usd_value }} </td>
+                                    <td> {{ balance.coin_price_date }} </td>
+                                    <td> ${{ balance.coin_price }} </td>
+                                    <td> ${{ balance.usd_value }} </td>
                                 </tr>
                             {% endfor %}
                                 <tr>
-                                    <td> Total Balance </td>
-                                    <td> {{ total_value }} </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Total Balance </b></td>
+                                    <td><b>${{ total_value }} </b></td>
                                 </tr>
                         </table>
                     {% else %}
                         <div style="text-align: center">
                         <h3> No wallets have been added. </h3>
                         <hr class="intro-divider">
-                    {% endif %}   
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
