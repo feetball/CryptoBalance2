@@ -71,7 +71,36 @@ def admin_dashboard():
     if not current_user.is_admin:
         abort(403)
 
-    return render_template('home/admin_dashboard.html', title="Dashboard")
+    get_coin_prices(start_time=datetime.datetime.now())
+
+    wallets = User.query.get_or_404(current_user.id).wallets
+
+    balances = []
+    total_value = 0.00
+
+    if wallets:
+        for wallet in wallets:
+            price = get_latest_coin_price(wallet.Coin.symbol)
+            qty_coins = get_coin_qty(wallet)
+
+            if type(qty_coins) is unicode:
+                balance = Balance(coin_symbol = wallet.Coin.symbol,
+                              coin_price = price,
+                              address = wallet.address,
+                              num_coins = qty_coins,
+                              usd_value = 'n/a')
+                balances.append(balance)
+
+            else:
+                balance = Balance(coin_symbol = wallet.Coin.symbol,
+                                  coin_price = price,
+                                  address = wallet.address,
+                                  num_coins = qty_coins,
+                                  usd_value = price * qty_coins)
+                balances.append(balance)
+                total_value += price*qty_coins
+
+    return render_template('home/admin_dashboard.html', balances=balances, total_value=total_value, title="Dashboard")
 
 ##################
 # Account Info Views

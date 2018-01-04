@@ -1,4 +1,4 @@
-import requests, ast
+import requests, ast, urllib3
 import sqlalchemy
 import time
 
@@ -38,9 +38,8 @@ def get_coin_prices(start_time=None):
         else:
             return 'No price check needed!'
     except Exception as e:
-        e.message =  'Error getting coin prices.  Error message: ' + str(e.message)
-        raise e
-
+        error_message = 'Error getting coin prices from API.  The ' + coin_price_api.name + ' API may be down.'
+        return error_message
 
 def get_last_price_check():
     try:
@@ -86,7 +85,7 @@ def get_coin_qty(wallet):
     except (requests.exceptions.ConnectionError, requests.exceptions.TimeoutError) as e:
         error_message = 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
         return error_message
-        
+
     except Exception as e:
         e.message = 'Error getting coin quantity.  Error Message: ' + str(e.message) + ' Coin: ' + wallet.Coin.symbol
         raise e

@@ -29,7 +29,6 @@ def get_coin_prices():
     return render_template('admin/tasks/execute_task.html',
                            status=ret, title="Execute Task")
 
-
 #############
 # Coin Views
 #############
