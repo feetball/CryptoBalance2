@@ -91,6 +91,5 @@ def get_coin_qty(wallet):
         return error_message
 
     except Exception as e:
-        pdb.set_trace()
         e.message = 'Error getting coin quantity.  Error Message: ' + str(e.message) + ' Coin: ' + wallet.Coin.symbol
         raise e

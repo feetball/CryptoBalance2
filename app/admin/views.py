@@ -248,6 +248,7 @@ def add_user():
                     username=form.username.data,
                     first_name=form.first_name.data,
                     last_name=form.last_name.data,
+                    password=form.password.data,
                     is_admin=form.is_admin.data)
         try:
             # add user to the database
@@ -284,6 +285,8 @@ def edit_user(id):
         user.username = form.username.data
         user.first_name = form.first_name.data
         user.last_name = form.last_name.data
+        user.password = form.password.data
+        user.is_admin = form.is_admin.data
         db.session.add(user)
         db.session.commit()
         flash('You have successfully edited the user.')
@@ -295,6 +298,8 @@ def edit_user(id):
     form.username.data = user.username
     form.first_name.data = user.first_name
     form.last_name.data = user.last_name
+    form.password.data = user.password_hash
+    form.is_admin.data = user.is_admin
     return render_template('admin/users/user.html', add_user=add_user,
                            form=form, title="Edit User")
 

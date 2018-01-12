@@ -97,9 +97,9 @@ def upgrade():
         CoinApi_table,
         [
             {'id':1, 'name':'default', 'url':'default', 'qty_extract_format':'default', 'key':'default'},
-            {'id':2, 'name':'CryptoID', 'url':'https://chainz.cryptoid.info/{symbol}/api.dws?q=getbalance&key={key}&a={address}', 'qty_extract_format':'float(url_response.text)', 'key':'default'},
-            {'id':3, 'name':'Etherscan.io', 'url':'https://api.etherscan.io/api?module=account&action=balance&tag=latest&apikey={key}&address={address}', 'qty_extract_format':"float(ast.literal_eval(url_response.text)['result'])/10e17", 'key':'1a29b449d778'},
-            {'id':4, 'name':'Ripple.com', 'url':'https://data.ripple.com/v2/accounts/{address}/stats/value?limit=1&descending=true', 'qty_extract_format':"float(ast.literal_eval(url_response.text)['rows'][0]['account_value'])", 'key':'UUS5UI9VIRY8N5CARUWJTT1IQ5FT4F2UYR'},
+            {'id':2, 'name':'CryptoID', 'url':'https://chainz.cryptoid.info/{symbol}/api.dws?q=getbalance&key={key}&a={address}', 'qty_extract_format':'float(url_response.text)', 'key':'1a29b449d778'},
+            {'id':3, 'name':'Etherscan.io', 'url':'https://api.etherscan.io/api?module=account&action=balance&tag=latest&apikey={key}&address={address}', 'qty_extract_format':"float(ast.literal_eval(url_response.text)['result'])/10e17", 'key':'UUS5UI9VIRY8N5CARUWJTT1IQ5FT4F2UYR'},
+            {'id':4, 'name':'Ripple.com', 'url':'https://data.ripple.com/v2/accounts/{address}/stats/value?limit=1&descending=true', 'qty_extract_format':"float(ast.literal_eval(url_response.text)['rows'][0]['account_value'])", 'key':'n/a'},
             {'id':5, 'name':'Zcha.in (Z-Cash)', 'url':'https://api.zcha.in/v2/mainnet/accounts/{address}', 'qty_extract_format':"float(ast.literal_eval(url_response.text)['balance'])", 'key':'n/a'},
             {'id':6, 'name':'Decred.org', 'url':'https://mainnet.decred.org/api/addr/{address}/?noTxList=1', 'qty_extract_format':"float(ast.literal_eval(url_response.text)['balance'])", 'key':'n/a'},
             {'id':7, 'name':'CoinPrices', 'url':'https://api.coinmarketcap.com/v1/ticker/', 'qty_extract_format':'default', 'key':'n/a'}

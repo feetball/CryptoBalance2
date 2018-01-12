@@ -2,8 +2,8 @@
 import pdb
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, FloatField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, FloatField, PasswordField, StringField, SubmitField, ValidationError, BooleanField
+from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 from wtforms.ext.dateutil.fields import DateTimeField
 from ..models import Coin, CoinApi, CoinPrice, Wallet, User
@@ -54,6 +54,12 @@ class UserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[
+                                    DataRequired(),
+                                    EqualTo('confirm_password')
+                                    ])
+    confirm_password = PasswordField('Confirm Password')
+    is_admin = BooleanField('Admin?')
     submit = SubmitField('Submit')
     
 class MessageForm(FlaskForm):
