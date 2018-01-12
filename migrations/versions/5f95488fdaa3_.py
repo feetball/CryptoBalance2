@@ -95,7 +95,7 @@ def upgrade():
     # ### end Alembic commands ###
 
     op.bulk_insert(
-        CoinApi,
+        CoinApi_table,
         [
             {'id':1, 'name':'default', 'url':'default', 'qty_extract_format':'default', 'key':'default'},
             {'id':2, 'name':'CryptoID', 'url':'https://chainz.cryptoid.info/{symbol}/api.dws?q=getbalance&key={key}&a={address}', 'qty_extract_format':'float(url_response.text)', 'key':'default'},
