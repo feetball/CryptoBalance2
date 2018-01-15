@@ -37,6 +37,10 @@
                                 <td><b>${{ total_value }} </b></td>
                             </tr>
                     </table>
+                {% elseif error %}
+                    <div style="text-align: center">
+                    <h3> Error: {{ error }} </h3>
+                    <hr class="intro-divider">
                 {% else %}
                     <div style="text-align: center">
                     <h3> No wallets have been added. </h3>
