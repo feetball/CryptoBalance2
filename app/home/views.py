@@ -73,40 +73,45 @@ def admin_dashboard():
     # prevent non-admins from accessing the page
     if not current_user.is_admin:
         abort(403)
+    try:
+        
+        get_coin_prices(start_time=datetime.datetime.now())
 
-    get_coin_prices(start_time=datetime.datetime.now())
+        wallets = User.query.get_or_404(current_user.id).wallets
 
-    wallets = User.query.get_or_404(current_user.id).wallets
+        balances = []
+        total_value = 0.00
 
-    balances = []
-    total_value = 0.00
+        if wallets:
+            for wallet in wallets:
+                price, date = get_latest_coin_price(wallet.Coin.symbol)
+                qty_coins = get_coin_qty(wallet)
+                price = float("%.2f" % price)
 
-    if wallets:
-        for wallet in wallets:
-            price, date = get_latest_coin_price(wallet.Coin.symbol)
-            qty_coins = get_coin_qty(wallet)
-            price = float("%.2f" % price)
-
-            if type(qty_coins) is unicode:
-                balance = Balance(coin_symbol = wallet.Coin.symbol,
-                              coin_price = price,
-                              coin_price_date = date,
-                              address = wallet.address,
-                              num_coins = qty_coins,
-                              usd_value = 'n/a')
-                balances.append(balance)
-
-            else:
-                balance = Balance(coin_symbol = wallet.Coin.symbol,
+                if type(qty_coins) is unicode:
+                    balance = Balance(coin_symbol = wallet.Coin.symbol,
                                   coin_price = price,
                                   coin_price_date = date,
                                   address = wallet.address,
                                   num_coins = qty_coins,
-                                  usd_value = "%.2f" % (price * qty_coins))
-                balances.append(balance)
-                total_value += price*qty_coins
+                                  usd_value = 'n/a')
+                    balances.append(balance)
 
-    return render_template('home/admin_dashboard.html', balances=balances, total_value="%.2f" % (total_value), title="Dashboard")
+                else:
+                    balance = Balance(coin_symbol = wallet.Coin.symbol,
+                                      coin_price = price,
+                                      coin_price_date = date,
+                                      address = wallet.address,
+                                      num_coins = qty_coins,
+                                      usd_value = "%.2f" % (price * qty_coins))
+                    balances.append(balance)
+                    total_value += price*qty_coins
+
+        return render_template('home/admin_dashboard.html', balances=balances, total_value="%.2f" % (total_value), title="Dashboard")
+    
+    except Exception as e:
+        error_message = 'Error getting coin prices from API.  The coin price API may be down.  Error Message: ' + str(e.message)
+        flash(error_message)
 
 ##################
 # Account Info Views
