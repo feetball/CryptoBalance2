@@ -74,7 +74,7 @@ def admin_dashboard():
     if not current_user.is_admin:
         abort(403)
     try:
-        
+
         get_coin_prices(start_time=datetime.datetime.now())
 
         wallets = User.query.get_or_404(current_user.id).wallets
@@ -108,10 +108,11 @@ def admin_dashboard():
                     total_value += price*qty_coins
 
         return render_template('home/admin_dashboard.html', balances=balances, total_value="%.2f" % (total_value), title="Dashboard")
-    
+
     except Exception as e:
         error_message = 'Error getting coin prices from API.  The coin price API may be down.  Error Message: ' + str(e.message)
         flash(error_message)
+        return render_template('home/admin_dashboard.html', error=error_message, title="Dashboard")
 
 ##################
 # Account Info Views
