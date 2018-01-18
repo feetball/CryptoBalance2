@@ -14,7 +14,7 @@ def get_coin_prices(start_time=None):
     try:
         if price_check_needed():
             coin_price_api = CoinApi.query.filter_by(name='CoinPrices').first_or_404()
-            coin_price_response = requests.get(coin_price_api.url)
+            coin_price_response = requests.get(coin_price_api.url, timeout=15)
             coin_prices = json.loads(coin_price_response.text)
 
             coins = Coin.query.all()
@@ -38,7 +38,7 @@ def get_coin_prices(start_time=None):
         else:
             return 'No price check needed!'
     except Exception as e:
-        error_message = 'Error getting coin prices from API.  The ' + coin_price_api.name + ' API may be down.'
+        error_message = 'Error getting coin prices from API.  The ' + coin_price_api.name + ' API may be down. Error: ' + requests.get(coin_price_api.url).text
         return error_message
 
 def get_last_price_check():
