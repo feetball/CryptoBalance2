@@ -38,7 +38,7 @@ def get_coin_prices(start_time=None):
         else:
             return 'No price check needed!'
     except Exception as e:
-        error_message = 'Error getting coin prices from API.  The ' + coin_price_api.name + ' API may be down. Error: ' + requests.get(coin_price_api.url).text
+        error_message = 'Error getting coin prices from API.  The ' + coin_price_api.name + ' API may be down.'
         return error_message
 
 def get_last_price_check():
@@ -49,7 +49,7 @@ def get_last_price_check():
         else:
             return None
     except Exception as e:
-        e.message =  'Error getting last price check.  Error Message: ' + str(e.message)
+        e.message =  'Error getting last price check.'
         raise e
 
 def price_check_needed():
@@ -72,7 +72,7 @@ def get_latest_coin_price(coin_symbol):
         
         return coin_price.price, coin_price.date
     except Exception as e:
-        e.message =  'Error getting last price.  Error Message: ' + str(e.message)
+        e.message =  'Error getting last price.'
         raise e
 
 def get_coin_qty(wallet):
@@ -91,5 +91,5 @@ def get_coin_qty(wallet):
         return error_message
 
     except Exception as e:
-        e.message = 'Error getting coin quantity.  Error Message: ' + str(e.message) + ' Coin: ' + wallet.Coin.symbol
+        e.message = 'Error getting coin quantity.  Coin: ' + wallet.Coin.symbol
         raise e
