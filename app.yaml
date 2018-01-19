@@ -5,8 +5,10 @@ threadsafe: true
 handlers:
 - url: /static
   static_dir: app/static
+  secure: always
 - url: /.*
   script: run.app
+  secure: always
 
 libraries:
 - name: ssl

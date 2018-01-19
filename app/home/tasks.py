@@ -69,7 +69,7 @@ def price_check_needed():
 def get_latest_coin_price(coin_symbol):
     try:
         coin_price = db.session.query(CoinPrice).join(CoinPrice.Coin).filter(Coin.symbol==coin_symbol.upper()).order_by(desc(CoinPrice.date)).first()
-        
+
         return coin_price.price, coin_price.date
     except Exception as e:
         e.message =  'Error getting last price.'
@@ -83,8 +83,11 @@ def get_coin_qty(wallet):
         if '500 Internal Server Error' in url_response.text:
             return 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
         # next line will set coin quantity to coin_qty
-        exec('coin_qty = ' + wallet.Coin.CoinApi.qty_extract_format)
-        return coin_qty
+	try:
+            exec('coin_qty = ' + wallet.Coin.CoinApi.qty_extract_format)
+            return coin_qty
+        except:
+            return 0
 
     except requests.exceptions as e:
         error_message = 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
