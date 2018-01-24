@@ -42,29 +42,22 @@ def get_coin_prices(start_time=None):
         return error_message
 
 def get_last_price_check():
-    try:
-        last_message = Message.query.filter_by(name='GET_COIN_PRICES').order_by(desc(Message.date)).first()
-        if last_message:
-            return last_message.date
-        else:
-            return None
-    except Exception as e:
-        e.message =  'Error getting last price check.'
-        raise e
+    last_message = Message.query.filter_by(name='GET_COIN_PRICES').order_by(desc(Message.date)).first()
+    if last_message:
+        return last_message.date
+    else:
+        return None
 
 def price_check_needed():
-    try:
-        last_price_check = get_last_price_check()
-        if last_price_check:
-            print "time diff: " + str(((datetime.now() - last_price_check).seconds)/60)
-            if ((datetime.now() - last_price_check).seconds)/300 > 1:
-                return True
-            else:
-                return False
-        else:
+    last_price_check = get_last_price_check()
+    if last_price_check:
+        print "time diff: " + str(((datetime.now() - last_price_check).seconds)/60)
+        if ((datetime.now() - last_price_check).seconds)/300 > 1:
             return True
-    except Exception as e:
-        raise e
+        else:
+            return False
+    else:
+        return True
 
 def get_latest_coin_price(coin_symbol):
     try:
@@ -72,8 +65,9 @@ def get_latest_coin_price(coin_symbol):
 
         return coin_price.price, coin_price.date
     except Exception as e:
-        e.message =  'Error getting last price.'
-        raise e
+	logging.error('Error in get_latest_coin_price for coin: ' + coin_symbol + ' ErrorMessage: ' + str(e.message)) 
+        e.message =  'Error getting last copin price foor coin: ' + coin_symbol
+	raise e
 
 def get_coin_qty(wallet):
     try:
@@ -81,18 +75,22 @@ def get_coin_qty(wallet):
         url = db_url.format(**{"symbol":wallet.Coin.symbol.lower(), "key":wallet.Coin.CoinApi.key, "address":wallet.address})
         url_response = requests.get(url)
         if '500 Internal Server Error' in url_response.text:
-            return 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
+            error_message = 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
+            logging.error(error_message + ' UrlResponse: ' + url_response.text)
         # next line will set coin quantity to coin_qty
 	try:
             exec('coin_qty = ' + wallet.Coin.CoinApi.qty_extract_format)
             return coin_qty
-        except:
+        except Exception as e:
+            logging.error('Error getting coin qty from url_response.  ErrorMessage: ' + str(e.message))
             return 0
 
     except requests.exceptions as e:
-        error_message = 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol
-        return error_message
+        error_message = 'Error getting coin quantity from API.  The ' + wallet.Coin.CoinApi.name + ' API may be down. Coin: ' + wallet.Coin.symbol + ' Try refreshing the page'
+        logging.error(error_message + ' ErrorMessage: ' + str(e.message))
+	return error_message
 
     except Exception as e:
+        logging.error('Overall Error getting coin quantity. ErrorMessage: ' + str(e.message) + ' Coin: ' + wallet.Coin.symbol)
         e.message = 'Error getting coin quantity.  Coin: ' + wallet.Coin.symbol
         raise e
