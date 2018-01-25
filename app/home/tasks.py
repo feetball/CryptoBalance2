@@ -1,6 +1,7 @@
 import requests, ast, urllib3
 import sqlalchemy
 import time
+import logging
 
 import pdb
 
